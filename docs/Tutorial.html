@@ -56,27 +56,12 @@ ul.no-bullet {list-style: none}
 <p>
 Next: <a href="Reference-Guide.html#Reference-Guide" accesskey="n" rel="next">Reference Guide</a>, Previous: <a href="Introduction.html#Introduction" accesskey="p" rel="prev">Introduction</a>, Up: <a href="index.html" accesskey="u" rel="up">Guile-GI</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
+<hr>
 <span id="Tutorial-1"></span><h2 class="chapter">2 Tutorial</h2>
 
 
-<ul class="section-toc">
-<li><a href="#Parsing-Typelibs-and-Creating-Bindings" accesskey="1">Parsing Typelibs and Creating Bindings</a></li>
-<li><a href="#Generating-Documentation-from-Typelibs" accesskey="2">Generating Documentation from Typelibs</a></li>
-<li><a href="#Categories-of-Typelib-Bindings" accesskey="3">Categories of Typelib Bindings</a></li>
-<li><a href="#Argument-Conversion" accesskey="4">Argument Conversion</a></li>
-<li><a href="#Working-with-GObjects" accesskey="5">Working with GObjects</a></li>
-<li><a href="#Sample-Applications" accesskey="6">Sample Applications</a></li>
-<li><a href="#Threads-and-Concurrency" accesskey="7">Threads and Concurrency</a></li>
-<li><a href="#Debugging-and-Profiling" accesskey="8">Debugging and Profiling</a></li>
-<li><a href="#Application-Deployment" accesskey="9">Application Deployment</a></li>
-<li><a href="#Testing-and-Continuous-Integration">Testing and Continuous Integration</a></li>
-</ul>
 <hr>
 <div class="section" id="Parsing-Typelibs-and-Creating-Bindings">
-<div class="header">
-<p>
-Next: <a href="#Generating-Documentation-from-Typelibs" accesskey="n" rel="next">Generating Documentation from Typelibs</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Parsing-Typelibs-and-Creating-Bindings-1"></span><h3 class="section">2.1 Parsing Typelibs and Creating Bindings</h3>
 
 <p>When Guile-GI is used, it creates procedures, variables, and types
@@ -87,11 +72,6 @@ file.
 <p>To create the bindings, you must load a typelib through Guile-GI in one
 form or another.  You can choose one of three basic strategies.
 </p>
-<ul class="section-toc">
-<li><a href="#use_002dtypelibs" accesskey="1"><code>use-typelibs</code></a></li>
-<li><a href="#require-and-load_002dby_002dname" accesskey="2"><code>require</code> and <code>load-by-name</code></a></li>
-<li><a href="#typelib_002d_003emodule" accesskey="3"><code>typelib-&gt;module</code></a></li>
-</ul>
 <div class="subsection" id="use_002dtypelibs">
 <h4 class="subsection">2.1.1 <code>use-typelibs</code></h4>
 
@@ -186,10 +166,6 @@ See <a data-manual="guile" href="https://www.gnu.org/software/guile/manual/html_
 </div>
 </div>
 <div class="section" id="Generating-Documentation-from-Typelibs">
-<div class="header">
-<p>
-Next: <a href="#Categories-of-Typelib-Bindings" accesskey="n" rel="next">Categories of Typelib Bindings</a>, Previous: <a href="#Parsing-Typelibs-and-Creating-Bindings" accesskey="p" rel="prev">Parsing Typelibs and Creating Bindings</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Generating-Documentation-from-Typelibs-1"></span><h3 class="section">2.2 Generating Documentation from Typelibs</h3>
 
 <p>Loading typelibs alone might be all you need if you have perfect
@@ -230,10 +206,6 @@ such files in a few locations, including the current working directory.
 <hr>
 </div>
 <div class="section" id="Categories-of-Typelib-Bindings">
-<div class="header">
-<p>
-Next: <a href="#Argument-Conversion" accesskey="n" rel="next">Argument Conversion</a>, Previous: <a href="#Generating-Documentation-from-Typelibs" accesskey="p" rel="prev">Generating Documentation from Typelibs</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Categories-of-Typelib-Bindings-1"></span><h3 class="section">2.3 Categories of Typelib Bindings</h3>
 
 <p>Typelib files describe a few different types of information.  Here&rsquo;s a
@@ -241,19 +213,8 @@ quick introduction to the categories of information it provides, and how
 Guile-GI creates bindings.
 </p>
 
-<ul class="section-toc">
-<li><a href="#Constants" accesskey="1">Constants</a></li>
-<li><a href="#Flags-and-Enums" accesskey="2">Flags and Enums</a></li>
-<li><a href="#Structs-and-Unions" accesskey="3">Structs and Unions</a></li>
-<li><a href="#GObjects" accesskey="4">GObjects</a></li>
-<li><a href="#Procedures-and-Methods" accesskey="5">Procedures and Methods</a></li>
-</ul>
 <hr>
 <div class="subsection" id="Constants">
-<div class="header">
-<p>
-Next: <a href="#Flags-and-Enums" accesskey="n" rel="next">Flags and Enums</a>, Up: <a href="#Categories-of-Typelib-Bindings" accesskey="u" rel="up">Categories of Typelib Bindings</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Constants-1"></span><h4 class="subsection">2.3.1 Constants</h4>
 
 <p>On introspection, when a typelib file defines a constant, Guile-GI
@@ -272,10 +233,6 @@ BIG_ENDIAN
 <hr>
 </div>
 <div class="subsection" id="Flags-and-Enums">
-<div class="header">
-<p>
-Next: <a href="#Structs-and-Unions" accesskey="n" rel="next">Structs and Unions</a>, Previous: <a href="#Constants" accesskey="p" rel="prev">Constants</a>, Up: <a href="#Categories-of-Typelib-Bindings" accesskey="u" rel="up">Categories of Typelib Bindings</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Flags-and-Enums-1"></span><h4 class="subsection">2.3.2 Flags and Enums</h4>
 
 <p>When a typelib file contains a set of flags or enums, Guile-GI creates a
@@ -301,10 +258,6 @@ Its association map can be queried two ways.
 <hr>
 </div>
 <div class="subsection" id="Structs-and-Unions">
-<div class="header">
-<p>
-Next: <a href="#GObjects" accesskey="n" rel="next">GObjects</a>, Previous: <a href="#Flags-and-Enums" accesskey="p" rel="prev">Flags and Enums</a>, Up: <a href="#Categories-of-Typelib-Bindings" accesskey="u" rel="up">Categories of Typelib Bindings</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Structs-and-Unions-1"></span><h4 class="subsection">2.3.3 Structs and Unions</h4>
 
 <p>In C, a <code>struct</code> or <code>union</code> is named type of a collection of
@@ -335,10 +288,6 @@ using <code>make</code>.
 <hr>
 </div>
 <div class="subsection" id="GObjects">
-<div class="header">
-<p>
-Next: <a href="#Procedures-and-Methods" accesskey="n" rel="next">Procedures and Methods</a>, Previous: <a href="#Structs-and-Unions" accesskey="p" rel="prev">Structs and Unions</a>, Up: <a href="#Categories-of-Typelib-Bindings" accesskey="u" rel="up">Categories of Typelib Bindings</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="GObjects-1"></span><h4 class="subsection">2.3.4 GObjects</h4>
 
 <p>Some libraries use the GObject class system provided by GLib.  GLib
@@ -379,10 +328,6 @@ when the object is constructed
 <hr>
 </div>
 <div class="subsection" id="Procedures-and-Methods">
-<div class="header">
-<p>
-Previous: <a href="#GObjects" accesskey="p" rel="prev">GObjects</a>, Up: <a href="#Categories-of-Typelib-Bindings" accesskey="u" rel="up">Categories of Typelib Bindings</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Procedures-and-Methods-1"></span><h4 class="subsection">2.3.5 Procedures and Methods</h4>
 
 <p>When a library provides functions, they can either be standalone
@@ -430,10 +375,6 @@ Such conflicts require manual resolution.
 </div>
 </div>
 <div class="section" id="Argument-Conversion">
-<div class="header">
-<p>
-Next: <a href="#Working-with-GObjects" accesskey="n" rel="next">Working with GObjects</a>, Previous: <a href="#Categories-of-Typelib-Bindings" accesskey="p" rel="prev">Categories of Typelib Bindings</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Argument-Conversion-1"></span><h3 class="section">2.4 Argument Conversion</h3>
 
 <p>The bulk of Guile-GI is the code that converts Scheme function arguments
@@ -442,24 +383,8 @@ expects.  Guile-GI tries to do it in a predictable and unsurprising way,
 but, the conversion from Scheme to native types has some mismatch.
 </p>
 
-<ul class="section-toc">
-<li><a href="#Function-Parameters-Arity-and-Return-Values" accesskey="1">Function Parameters, Arity, and Return Values</a></li>
-<li><a href="#Booleans" accesskey="2">Booleans</a></li>
-<li><a href="#Characters" accesskey="3">Characters</a></li>
-<li><a href="#Numbers" accesskey="4">Numbers</a></li>
-<li><a href="#Strings" accesskey="5">Strings</a></li>
-<li><a href="#Structs-Unions-and-Objects" accesskey="6">Structs, Unions, and Objects</a></li>
-<li><a href="#Native-Pointers" accesskey="7">Native Pointers</a></li>
-<li><a href="#Arrays" accesskey="8">Arrays</a></li>
-<li><a href="#Null-Pointers-and-Optional-Arguments" accesskey="9">Null Pointers and Optional Arguments</a></li>
-<li><a href="#Hash-Tables-and-GHashTable-Types">Hash Tables and GHashTable Types</a></li>
-</ul>
 <hr>
 <div class="subsection" id="Function-Parameters-Arity-and-Return-Values">
-<div class="header">
-<p>
-Next: <a href="#Booleans" accesskey="n" rel="next">Booleans</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Function-Parameters_002c-Arity_002c-and-Return-Values"></span><h4 class="subsection">2.4.1 Function Parameters, Arity, and Return Values</h4>
 <span id="index-arity"></span>
 <span id="index-return-values"></span>
@@ -512,10 +437,6 @@ Guile procedures <code>values</code> and <code>receive</code>.
 <hr>
 </div>
 <div class="subsection" id="Booleans">
-<div class="header">
-<p>
-Next: <a href="#Characters" accesskey="n" rel="next">Characters</a>, Previous: <a href="#Function-Parameters-Arity-and-Return-Values" accesskey="p" rel="prev">Function Parameters, Arity, and Return Values</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Booleans-1"></span><h4 class="subsection">2.4.2 Booleans</h4>
 
 <p>Guile booleans convert to native 0 and 1 boolean values.
@@ -523,10 +444,6 @@ Next: <a href="#Characters" accesskey="n" rel="next">Characters</a>, Previous: <
 <hr>
 </div>
 <div class="subsection" id="Characters">
-<div class="header">
-<p>
-Next: <a href="#Numbers" accesskey="n" rel="next">Numbers</a>, Previous: <a href="#Booleans" accesskey="p" rel="prev">Booleans</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Characters-1"></span><h4 class="subsection">2.4.3 Characters</h4>
 
 <p>There are two native character types, the 1-byte <code>gchar</code> and the
@@ -550,10 +467,6 @@ represent.
 <hr>
 </div>
 <div class="subsection" id="Numbers">
-<div class="header">
-<p>
-Next: <a href="#Strings" accesskey="n" rel="next">Strings</a>, Previous: <a href="#Characters" accesskey="p" rel="prev">Characters</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Numbers-1"></span><h4 class="subsection">2.4.4 Numbers</h4>
 
 <p>The conversion between Scheme and native integer arguments is direct,
@@ -565,10 +478,6 @@ argument expecting a 4-byte float.
 <hr>
 </div>
 <div class="subsection" id="Strings">
-<div class="header">
-<p>
-Next: <a href="#Structs-Unions-and-Objects" accesskey="n" rel="next">Structs, Unions, and Objects</a>, Previous: <a href="#Numbers" accesskey="p" rel="prev">Numbers</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Strings-1"></span><h4 class="subsection">2.4.5 Strings</h4>
 
 <p>Native strings are expected to be either in the locale encoding or in
@@ -589,10 +498,6 @@ string cannot be represented in the current locale.
 <hr>
 </div>
 <div class="subsection" id="Structs-Unions-and-Objects">
-<div class="header">
-<p>
-Next: <a href="#Native-Pointers" accesskey="n" rel="next">Native Pointers</a>, Previous: <a href="#Strings" accesskey="p" rel="prev">Strings</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Structs_002c-Unions_002c-and-Objects"></span><h4 class="subsection">2.4.6 Structs, Unions, and Objects</h4>
 
 <p>Guile-GI creates GOOPS types to represent native struct or object types,
@@ -605,10 +510,6 @@ instance can point to the same pointer.
 <hr>
 </div>
 <div class="subsection" id="Native-Pointers">
-<div class="header">
-<p>
-Next: <a href="#Arrays" accesskey="n" rel="next">Arrays</a>, Previous: <a href="#Structs-Unions-and-Objects" accesskey="p" rel="prev">Structs, Unions, and Objects</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Native-Pointers-1"></span><h4 class="subsection">2.4.7 Native Pointers</h4>
 
 <p>Some procedures expect native void pointers.  For these arguments, you
@@ -617,10 +518,6 @@ can pass a Guile foreign pointer or a Guile bytevector.
 <hr>
 </div>
 <div class="subsection" id="Arrays">
-<div class="header">
-<p>
-Next: <a href="#Null-Pointers-and-Optional-Arguments" accesskey="n" rel="next">Null Pointers and Optional Arguments</a>, Previous: <a href="#Native-Pointers" accesskey="p" rel="prev">Native Pointers</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Arrays-1"></span><h4 class="subsection">2.4.8 Arrays</h4>
 
 <p>There are many different types of native arrays, and the Guile types
@@ -656,10 +553,6 @@ procedures will likely fail to do anything sensible.
 <hr>
 </div>
 <div class="subsection" id="Null-Pointers-and-Optional-Arguments">
-<div class="header">
-<p>
-Next: <a href="#Hash-Tables-and-GHashTable-Types" accesskey="n" rel="next">Hash Tables and GHashTable Types</a>, Previous: <a href="#Arrays" accesskey="p" rel="prev">Arrays</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Null-Pointers-and-Optional-Arguments-1"></span><h4 class="subsection">2.4.9 Null Pointers and Optional Arguments</h4>
 
 <p>If a native function has a pointer argument that can be NULL, the Guile
@@ -668,10 +561,6 @@ Next: <a href="#Hash-Tables-and-GHashTable-Types" accesskey="n" rel="next">Hash 
 <hr>
 </div>
 <div class="subsection" id="Hash-Tables-and-GHashTable-Types">
-<div class="header">
-<p>
-Previous: <a href="#Null-Pointers-and-Optional-Arguments" accesskey="p" rel="prev">Null Pointers and Optional Arguments</a>, Up: <a href="#Argument-Conversion" accesskey="u" rel="up">Argument Conversion</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Hash-Tables-and-GHashTable-Types-1"></span><h4 class="subsection">2.4.10 Hash Tables and GHashTable Types</h4>
 
 <p>One special case is that of GLib&rsquo;s <code>GHashTable</code> types.  The
@@ -694,10 +583,6 @@ reflected in the Guile hash tables from which is was created.
 </div>
 </div>
 <div class="section" id="Working-with-GObjects">
-<div class="header">
-<p>
-Next: <a href="#Sample-Applications" accesskey="n" rel="next">Sample Applications</a>, Previous: <a href="#Argument-Conversion" accesskey="p" rel="prev">Argument Conversion</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Working-with-GObjects-1"></span><h3 class="section">2.5 Working with GObjects</h3>
 <span id="index-types"></span>
 
@@ -725,19 +610,8 @@ single-inheritance class structure.  A <code>RadioButton</code> is a type of
 If you need to access it, see <a href="Reference-Guide.html#Compatibility">Compatibility</a>.
 </p>
 
-<ul class="section-toc">
-<li><a href="#GType" accesskey="1">GType</a></li>
-<li><a href="#GObject-Methods" accesskey="2">GObject Methods</a></li>
-<li><a href="#GObject-Signals" accesskey="3">GObject Signals</a></li>
-<li><a href="#GObject-Properties" accesskey="4">GObject Properties</a></li>
-<li><a href="#Custom-GObjects" accesskey="5">Defining new GObject classes</a></li>
-</ul>
 <hr>
 <div class="subsection" id="GType">
-<div class="header">
-<p>
-Next: <a href="#GObject-Methods" accesskey="n" rel="next">GObject Methods</a>, Up: <a href="#Working-with-GObjects" accesskey="u" rel="up">Working with GObjects</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="GType-1"></span><h4 class="subsection">2.5.1 GType</h4>
 <span id="index-GType"></span>
 
@@ -760,10 +634,6 @@ no size indicator, since Guile expands numbers as needed.
 <hr>
 </div>
 <div class="subsection" id="GObject-Methods">
-<div class="header">
-<p>
-Next: <a href="#GObject-Signals" accesskey="n" rel="next">GObject Signals</a>, Previous: <a href="#GType" accesskey="p" rel="prev">GType</a>, Up: <a href="#Working-with-GObjects" accesskey="u" rel="up">Working with GObjects</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="GObject-Methods-1"></span><h4 class="subsection">2.5.2 GObject Methods</h4>
 <span id="index-methods"></span>
 
@@ -794,10 +664,6 @@ generic method.
 <hr>
 </div>
 <div class="subsection" id="GObject-Signals">
-<div class="header">
-<p>
-Next: <a href="#GObject-Properties" accesskey="n" rel="next">GObject Properties</a>, Previous: <a href="#GObject-Methods" accesskey="p" rel="prev">GObject Methods</a>, Up: <a href="#Working-with-GObjects" accesskey="u" rel="up">Working with GObjects</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="GObject-Signals-1"></span><h4 class="subsection">2.5.3 GObject Signals</h4>
 <span id="index-signals"></span>
 
@@ -907,15 +773,8 @@ calling the signal as a procedure.
 </p></dd></dl>
 
 
-<ul class="section-toc">
-<li><a href="#Signal-Accumulators" accesskey="1">Signal Accumulators</a></li>
-</ul>
 <hr>
 <div class="subsubsection" id="Signal-Accumulators">
-<div class="header">
-<p>
-Up: <a href="#GObject-Signals" accesskey="u" rel="up">GObject Signals</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Signal-Accumulators-1"></span><h4 class="subsubsection">2.5.3.1 Signal Accumulators</h4>
 <p>The signal accumulator is a special callback procedure that gets called
 during a signal emission.  The &ldquo;accumulator&rdquo; nomenclature comes from
@@ -951,10 +810,6 @@ than two values are returned signal handling is aborted.
 </div>
 </div>
 <div class="subsection" id="GObject-Properties">
-<div class="header">
-<p>
-Next: <a href="#Custom-GObjects" accesskey="n" rel="next">Defining new GObject classes</a>, Previous: <a href="#GObject-Signals" accesskey="p" rel="prev">GObject Signals</a>, Up: <a href="#Working-with-GObjects" accesskey="u" rel="up">Working with GObjects</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="GObject-Properties-1"></span><h4 class="subsection">2.5.4 GObject Properties</h4>
 
 <p>GObject objects may have one or more properties, which are variables
@@ -984,10 +839,6 @@ and using their getters and setters.
 <hr>
 </div>
 <div class="subsection" id="Custom-GObjects">
-<div class="header">
-<p>
-Previous: <a href="#GObject-Properties" accesskey="p" rel="prev">GObject Properties</a>, Up: <a href="#Working-with-GObjects" accesskey="u" rel="up">Working with GObjects</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Defining-new-GObject-classes"></span><h4 class="subsection">2.5.5 Defining new GObject classes</h4>
 <span id="index-GObjects"></span>
 <span id="index-classes_002c-GObject"></span>
@@ -1031,10 +882,6 @@ methods found in the <code>GObject</code> typelib.
 </div>
 </div>
 <div class="section" id="Sample-Applications">
-<div class="header">
-<p>
-Next: <a href="#Threads-and-Concurrency" accesskey="n" rel="next">Threads and Concurrency</a>, Previous: <a href="#Working-with-GObjects" accesskey="p" rel="prev">Working with GObjects</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Sample-Applications-1"></span><h3 class="section">2.6 Sample Applications</h3>
 
 <p>If you&rsquo;ve managed to survive the tutorial thus far, you know should know
@@ -1042,15 +889,8 @@ everything you need to start programming with Guile-GI.  Let&rsquo;s throw
 down some examples.
 </p>
 
-<ul class="section-toc">
-<li><a href="#Window-with-Button" accesskey="1">Window with Button</a></li>
-</ul>
 <hr>
 <div class="subsection" id="Window-with-Button">
-<div class="header">
-<p>
-Up: <a href="#Sample-Applications" accesskey="u" rel="up">Sample Applications</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Window-with-Button-1"></span><h4 class="subsection">2.6.1 Window with Button</h4>
 <p>We will demonstrate the capabilities of Guile-GI by creating
 a window with a button.  There are two version of the same script, so
@@ -1182,10 +1022,6 @@ methods one-by-one.
 </div>
 </div>
 <div class="section" id="Threads-and-Concurrency">
-<div class="header">
-<p>
-Next: <a href="#Debugging-and-Profiling" accesskey="n" rel="next">Debugging and Profiling</a>, Previous: <a href="#Sample-Applications" accesskey="p" rel="prev">Sample Applications</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Threads-and-Concurrency-1"></span><h3 class="section">2.7 Threads and Concurrency</h3>
 <span id="index-threads"></span>
 <span id="index-concurrency"></span>
@@ -1198,10 +1034,6 @@ calls to <code>typelib-load</code> need to be made from the same thread.
 <hr>
 </div>
 <div class="section" id="Debugging-and-Profiling">
-<div class="header">
-<p>
-Next: <a href="#Application-Deployment" accesskey="n" rel="next">Application Deployment</a>, Previous: <a href="#Threads-and-Concurrency" accesskey="p" rel="prev">Threads and Concurrency</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Debugging-and-Profiling-1"></span><h3 class="section">2.8 Debugging and Profiling</h3>
 <span id="index-debugging"></span>
 <span id="index-profiling"></span>
@@ -1225,16 +1057,8 @@ layer, Guile-GI provides some hook functions for the purposes
 of debugging and makes use of GLib&rsquo;s debug logging functionality.
 </p>
 
-<ul class="section-toc">
-<li><a href="#Debugging-Hooks" accesskey="1">Debugging Hooks</a></li>
-<li><a href="#GLib-Logging" accesskey="2">GLib Logging</a></li>
-</ul>
 <hr>
 <div class="subsection" id="Debugging-Hooks">
-<div class="header">
-<p>
-Next: <a href="#GLib-Logging" accesskey="n" rel="next">GLib Logging</a>, Up: <a href="#Debugging-and-Profiling" accesskey="u" rel="up">Debugging and Profiling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Debugging-Hooks-1"></span><h4 class="subsection">2.8.1 Debugging Hooks</h4>
 
 <p>Since most GObject-based libraries use an event and callback model,
@@ -1286,10 +1110,6 @@ events.
 <hr>
 </div>
 <div class="subsection" id="GLib-Logging">
-<div class="header">
-<p>
-Previous: <a href="#Debugging-Hooks" accesskey="p" rel="prev">Debugging Hooks</a>, Up: <a href="#Debugging-and-Profiling" accesskey="u" rel="up">Debugging and Profiling</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="GLib-Logging-1"></span><h4 class="subsection">2.8.2 GLib Logging</h4>
 
 <p>GLib provides a logging library whose behavior can be tailored using
@@ -1310,11 +1130,6 @@ will receive <em>a lot</em> of debugging information from any Guile-GI
 libraries being used.  To help better filter through all this, a
 <code>(gi logging)</code> library provides a pair of alternative loggers.
 </p>
-<ul class="section-toc">
-<li><a href="#Using-the-Port-Logger" accesskey="1">Using the Port Logger</a></li>
-<li><a href="#Using-the-systemd-journal-Logger" accesskey="2">Using the systemd journal Logger</a></li>
-<li><a href="#Using-a-custom-logger" accesskey="3">Using a custom logger</a></li>
-</ul>
 <div class="subsubsection" id="Using-the-Port-Logger">
 <h4 class="subsubsection">2.8.2.1 Using the Port Logger</h4>
 
@@ -1407,10 +1222,6 @@ that into log level flags by using <code>number-&gt;log-level</code>.
 </div>
 </div>
 <div class="section" id="Application-Deployment">
-<div class="header">
-<p>
-Next: <a href="#Testing-and-Continuous-Integration" accesskey="n" rel="next">Testing and Continuous Integration</a>, Previous: <a href="#Debugging-and-Profiling" accesskey="p" rel="prev">Debugging and Profiling</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Application-Deployment-1"></span><h3 class="section">2.9 Application Deployment</h3>
 <span id="index-deployment"></span>
 
@@ -1465,10 +1276,6 @@ and exporting it as a typelib instead.
 <hr>
 </div>
 <div class="section" id="Testing-and-Continuous-Integration">
-<div class="header">
-<p>
-Previous: <a href="#Application-Deployment" accesskey="p" rel="prev">Application Deployment</a>, Up: <a href="#Tutorial" accesskey="u" rel="up">Tutorial</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
-</div>
 <span id="Testing-and-Continuous-Integration-1"></span><h3 class="section">2.10 Testing and Continuous Integration</h3>
 <span id="index-testing"></span>
 <span id="index-continuous-integration"></span>
