@@ -47,7 +47,7 @@ jobs:
           rm docs/*.*
           mkdir -p docs
           cp *.css docs/
-          texi2any index.texi --css-ref=document-1.0.1.css --html --split=chapter --no-node-files --no-headers --output=docs
+          texi2any index.texi --css-ref=document-1.0.1.css --html --split=chapter --no-number-sections --no-headers --output=docs
           git add docs/*.html docs/*.css
           git commit -m "HTML update"
           git push origin master        
