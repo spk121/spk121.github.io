@@ -45,7 +45,7 @@ jobs:
           git rm docs/*.html
           mkdir -p docs
           cp *.css docs/
-          makeinfo guile-gi.texi --css-ref=document-1.0.1.css --html --split=chapter --output=docs
+          texi2any index.texi --css-ref=document-1.0.1.css --html --split=chapter --output=docs
           git add docs/*.html docs/*.css
           git commit -m "HTML update"
           git push origin master        
