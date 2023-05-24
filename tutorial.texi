@@ -1,0 +1,1013 @@
+@node Tutorial
+@chapter Tutorial
+
+@node Parsing Typelibs and Creating Bindings
+@section Parsing Typelibs and Creating Bindings
+
+When Guile-GI is used, it creates procedures, variables, and types
+according to the instructions in the @code{typelib} files.  These are
+created @emph{at runtime} as Guile loads them from the @code{typelib}
+file.
+
+To create the bindings, you must load a typelib through Guile-GI in one
+form or another.  You can choose one of three basic strategies.
+
+@subsection @code{use-typelibs}
+
+The easiest way of doing so is @code{use-typelibs}, as shown below.
+
+@example
+(use-modules (gi))
+(use-typelibs ("GLib" "2.0") ("Gtk" "3.0"))
+@end example
+
+@code{use-typelibs} works quite similar to @code{use-modules} and is in
+fact implemented in terms of it. The only difference in syntax is, that
+instead of a list of symbols describing a module, you have a list of
+exactly two strings, the first being the name of the typelib and the
+second being the version.
+
+Semantically, however, the difference to @code{use-modules} is bigger.
+Internally, Guile-GI creates modules for the typelibs as needed -- in
+this example these modules would be @code{(%gi GLib-2.0)} and @code{(%gi
+Gtk-3.0)} -- and loads the entire typelib into them.
+
+This approach has two major drawbacks.
+@enumerate
+@item
+Guile-GI has to load the entire typelib. For large typelibs, such as
+GTK, this takes a lot of time.
+
+@item
+Even though Guile-GI internally uses modules, these modules are not
+available to the user in any meaningful way.  Even another
+@code{use-modules} on them actually leads to undefined behaviour.  It
+may load the module if it has already been defined somewhere else, but
+it might also throw an error, claiming that no code for the module could
+be found.  This is to be expected, given that the modules are not backed
+by actual files.
+@end enumerate
+
+@code{use-typelibs} is a simple interface for Guile scripts not broken
+into multiple modules.
+
+@subsection @code{require} and @code{load-by-name}
+
+For efficiency's sake, you may want to only load parts, e.g. just
+GtkApplication and GtkWindow to significantly speed up loading.  By
+targeted use of @code{require} and @code{load-by-name}, you can load
+only the procedures you intend to use.  @code{(gi repository)} has
+primitives to facilitate exactly that. @xref{Typelib Introspection}.
+@example
+@include ex-load-by-name.scm
+@end example
+
+@subsection @code{typelib->module}
+
+If you don't care much about waiting times -- perhaps you only have
+a set of small dependencies, or you really need everything from a library --
+but you need the ability to refer to a module specifically through
+@code{use-modules}, you will have to provide your own module.
+However, writing all the @code{require} and @code{load-by-name}s when you
+don't care about granularity is tedious and error-prone.
+
+As a convenience @code{(gi repository)} also contains @code{typelib->module}.
+This procedure loads a typelib into the current module and also adds all
+functionality loaded in the process to the public inferface.
+@example
+@include gtk-3.scm
+
+;; additional code you might want to add and export
+@end example
+You may use it to create one such module per dependency, or one module for all
+dependencies.  Together with Guile's module system, you can even do some
+advanced operations, like loading all of Gtk under the prefix @code{gtk::}
+together with all of Gstreamer under the prefix @code{gst::}.
+@xref{Modules,,,guile,The Guile reference manual}.
+
+@node Generating Documentation from Typelibs
+@section Generating Documentation from Typelibs
+
+Loading typelibs alone might be all you need if you have perfect
+knowledge of all the libraries you are going to use and an intuitive
+understanding of how they are mapped to Scheme procedures.  Chances are,
+however, that you do not.  In this case, it might be useful to generate
+some documentation. @xref{Typelib Documentation}.
+
+Upon installation of Guile-GI, we install a script called
+@code{gi-gtkdoc}, that can be invoked through @code{guild}.  Running the
+script will create HTML documentation for a typelib file.
+
+You may also want to create a @file{guile-procedures.txt} file for use
+in the REPL.  We currently have no script for that, but one can easily
+be written.  The following for example exports all the documentation for
+GObject-2.0.
+
+@example
+#!/path/to/guile
+!#
+(use-modules (gi documentation))
+
+(let ((%typelib (typelib "GObject" "2.0"))
+      (%gir (false-if-exception (gir "GObject" "2.0")))
+      (%doc '()))
+  (set! %doc (parse %typelib %doc))
+  (close %typelib)
+  (when %gir
+    (set! %doc (parse %gir %doc))
+    (close %gir))
+  (->guile-procedures.txt %doc))
+@end example
+
+Use shell pipes to redirect the output into a file, preferably one
+called ``guile-procedures.txt''.  Guile will search for documentation in
+such files in a few locations, including the current working directory.
+
+@node Categories of Typelib Bindings
+@section Categories of Typelib Bindings
+
+Typelib files describe a few different types of information.  Here's a
+quick introduction to the categories of information it provides, and how
+Guile-GI creates bindings.
+
+@node Constants
+@subsection Constants
+
+On introspection, when a typelib file defines a constant, Guile-GI
+creates a variable.  The variable name is in @code{MACRO_CASE}, capital
+letters separated by underscores.  Note that the variables created are
+not themselves constants: one could @code{set!} them to another value,
+with likely detrimental effects.
+
+The names of the variables created will be the same as the native API,
+with the namespace removed.
+@example
+;; In C, the constant G_BIG_ENDIAN
+BIG_ENDIAN
+@end example
+
+@node Flags and Enums
+@subsection Flags and Enums
+
+When a typelib file contains a set of flags or enums, Guile-GI creates a
+class for that set.  That class contains an association map between
+symbols and values.
+
+For example, when Guile-GI encounters the  @code{G_APPLICATION_FLAGS}
+flags collection, it creates a GOOPS type @code{<GApplicationFlags>}.
+Its association map can be queried two ways.
+@example
+;; In C, (G_APPLICATION_HANDLES_OPEN | G_APPLICATION_NON_UNIQUE)
+(list->flags <GApplicationFlags> '(handles-open non-unique))
+(list->application-flags '(handles-open non-unique))
+@end example
+
+Enums are similar, except not accessed as lists.
+@example
+;; In C, the enum G_BUS_TYPE_SYSTEM
+(symbol->enum <GBusType> 'system)
+(symbol->bus-type 'system)
+@end example
+
+@node Structs and Unions
+@subsection Structs and Unions
+
+In C, a @code{struct} or @code{union} is named type of a collection of
+member objects.
+
+The unions and structs are handled in Guile-GI by creating a GOOPS type
+that wraps a native pointer.  Typically, a library provides methods to
+operate on structs and unions, and Guile-GI wraps those methods as GOOPS
+generic functions.  If a typelib does not provide an explicit
+constructor for a struct or union, an empty instance can be created by
+using @code{make}.
+
+@example
+@include ex-date.scm
+@end example
+
+@node GObjects
+@subsection GObjects
+
+Some libraries use the GObject class system provided by GLib.  GLib
+provides a complete, if idiosyncratic, class system written in C.  It
+has features such as inheritance and a generic message-passing facility
+it calls @emph{signals}.
+
+The GObjects are handled in Guile-GI by creating a GOOPS type that wraps
+a native pointer.  On the GOOPS side, we try to create the same
+inheritance hierarchy that the GObject classes use.  A library provides
+methods to operate on object, and Guile-GI creates GOOPS generic
+functions for those methods.
+
+Object instances usually will have parameters that can be queried and
+modified. If a typelib does not provide an explicit constructor for an
+object, an empty instance can be created by using
+@code{make}. @code{make} can also set the initial values of parameters
+when the object is constructed
+
+@example
+@include ex-gapplication.scm
+@end example
+
+@node Procedures and Methods
+@subsection Procedures and Methods
+
+When a library provides functions, they can either be standalone
+functions or methods.  Methods are functions closely associated with a
+type.
+
+When Guile-GI provides a binding for a stand-alone function, the
+function name is the kebab-case version of the native function name,
+with the namespace removed.
+@example
+;; In C, the function g_unix_mount_at(mount_path, time_read)
+(unix-mount-at mount-path)
+@end example
+
+When Guile-GI provides a binding for a method, it creates a GOOPS
+generic function.  The function name is of the form
+@code{type:method-name}.  It also provides an alias of the form
+@code{method-name}.  Often, the generic functions using the shorter
+method names end up overloaded; however, as they are bound to classes
+they can usually be disambiguated based on their first arguments,
+which are the object instances.
+@example
+;; In C, the GDate* method g_date_add_days
+;; The type:method form
+(date:add-days date 1)
+;; The method-only form
+(add-days date 1)
+@end example
+
+@quotation Caveat
+When loading multiple typelibs, it may happen, that the two define
+classes with an identical name modulo namespace and a similar API.
+We have already seen such an example with Gio and Gtk, both of which
+have an application class.  Usually, though not always, one inherits from
+the other.
+
+Even in this case, most methods can be disambiguated based on the object
+instances.  The exception to this rule are static methods -- like constructors --
+which not only share the same name but often enough also have the same signature.
+Such conflicts require manual resolution.
+@end quotation
+
+
+@node Argument Conversion
+@section Argument Conversion
+
+The bulk of Guile-GI is the code that converts Scheme function arguments
+to and from from the native arguments and return values that a library
+expects.  Guile-GI tries to do it in a predictable and unsurprising way,
+but, the conversion from Scheme to native types has some mismatch.
+
+@node Function Parameters Arity and Return Values
+@subsection Function Parameters, Arity, and Return Values
+@cindex arity
+@cindex return values
+@cindex function parameters
+
+When using Guile-GI, the Scheme versions of introspected native
+functions and callbacks will not always have the same number of input,
+output, and return parameters as the native functions do.  The GObject
+Introspection information designates the parameters to native functions
+as either @emph{in}, @emph{in/out} or @emph{out} parameters. The
+@emph{in/out} and @emph{out} parameters are native pointers, so that the
+C function may return data by reference.  To understand how they will
+appear in the Scheme mapping, a few rules must be understood.
+
+The basic rules as follows:
+@itemize @bullet
+@item
+If the native function has an input parameter, the Scheme binding will
+have an input parameter.
+@item
+If the native function has a return value that is not @code{void}, the
+Scheme binding will return a value.
+@item
+If the native function has an in/out parameter, the Scheme binding will
+take an input parameter and return the output value.
+@item
+If the native function has an out parameter, the Scheme binding will not
+have it as an input parameter but will return it as an output value.
+@end itemize
+
+By these rules, if the native function returns @code{void} and has no
+@emph{out} or @emph{in/out} parameters, the return value of the Scheme
+procedure is @code{*unspecified*}.
+
+If a native function returns a non-void value and has zero @emph{out} or
+@emph{in/out} parameters, or if a native function returns @code{void}
+and has a single @emph{out} or @emph{in/out} parameter, the Scheme
+binding will return a value.
+
+Otherwise, the Scheme binding will return multiple values, as with the
+Guile procedures @code{values} and @code{receive}.
+
+@findex values
+@findex receive
+
+@example
+;; In C, the declaration of g_unix_mount_at is
+;; GUnixMountEntry *g_unix_mount_at(const char *path,  /*in*/
+;;                                  guint64 *time_read /*out*/)
+(receive (mount-entry time-read)
+    (unix-mount-at path))
+@end example
+
+@node Booleans
+@subsection Booleans
+
+Guile booleans convert to native 0 and 1 boolean values.
+
+@node Characters
+@subsection Characters
+
+There are two native character types, the 1-byte @code{gchar} and the
+4-byte @code{gunichar}.  The native 1-byte @code{gchar} character type
+can represent many types of data, so understanding what a function wants
+depends on context.  It could be a single-byte character in a specific
+character encoding, a binary byte with no specific encoding, or an 8-bit
+integer.  The native @code{gunichar} type always represents a Unicode
+codepoint.
+
+When a 1-byte @code{gchar} is expected, if you pass a Guile character,
+the presumption is that Latin-1 encoding is correct, e.g. if a Guile
+character has codepoints U+0000 to U+00FF, it will be converted to a
+1-byte integer and passed to the @code{gchar}.  A Guile integer can also
+be passed when a native @code{gchar} is expected.
+
+When @code{gchar} is an output or return value, it is returned as an
+integer because it is not possible to know what it is meant to
+represent.
+
+@node Numbers
+@subsection Numbers
+
+The conversion between Scheme and native integer arguments is direct,
+but since Scheme integers can be any size, an overflow error can occur
+when converting to native values.  Likewise Scheme floating-point values
+are only 8-byte floats, so they can overflow when converting to a native
+argument expecting a 4-byte float.
+
+@node Strings
+@subsection Strings
+
+Native strings are expected to be either in the locale encoding or in
+UTF-8.  Guile strings are arrays of Unicode codepoints.
+
+GObject libraries usually use UTF-8 encoding for their strings, while
+Guile uses a different encoding internally for its strings.  Thus
+every time a string is parameter is passed through to a C procedure, a
+new UTF-8 copy of the Guile string is created.  The string is
+automatically freed when no longer in use.
+
+GObject has some procedures that deal with locale-encoded strings:
+notably those procedures that deal with environment variables.
+Guile-GI converts Guile strings to locale-encoded strings for those
+procedures.  Note that this may throw an encoding error if the Guile
+string cannot be represented in the current locale.
+
+@node Structs Unions and Objects
+@subsection Structs, Unions, and Objects
+
+Guile-GI creates GOOPS types to represent native struct or object types,
+and the GOOPS class wraps a native pointer to the object information.
+When converting from Scheme to native, the pointer is extracted.  When
+converting from native to Scheme, an instance of the GOOPS type is
+created to hold the returned pointer.  Note that more than one Guile
+instance can point to the same pointer.
+
+@node Native Pointers
+@subsection Native Pointers
+
+Some procedures expect native void pointers.  For these arguments, you
+can pass a Guile foreign pointer or a Guile bytevector.
+
+@node Arrays
+@subsection Arrays
+
+There are many different types of native arrays, and the Guile types
+expected for GObject procedures that native arrays varies depending on
+the type required.
+
+Typically, for simple native arrays of numerical types -- integers,
+floating points, etc -- a Guile bytevector needs to be used.  For these
+bytevectors, always use native-endianness.
+
+When a native array of @code{gunichar} values is expected, a Guile
+string can be used.
+
+When a native array of strings is expected, a Guile list or vector of
+strings can be used.
+
+For native arrays of GObject objects, structs, unions, flags, enums, and
+GTypes, a @emph{list} is used instead of a bytevector.
+
+If the native procedure expects a zero-terminated array, Guile-GI will
+provide that automatically.  There is no need to add you own zero.
+
+Some GObject procedures write output information into preallocated
+arrays.  For those procedures, the Guile caller will need to create
+and pass in a bytevector of the appropriate size.
+
+@quotation Warning
+It is best not to use any of GLib's @code{Array} and @code{ByteArray}
+procedures directly.  Since arrays get converted to bytevectors, these
+procedures will likely fail to do anything sensible.
+@end quotation
+
+@node Null Pointers and Optional Arguments
+@subsection Null Pointers and Optional Arguments
+
+If a native function has a pointer argument that can be NULL, the Guile
+@code{#f} can be sent or received to indicate a null pointer.
+
+@node Hash Tables and GHashTable Types
+@subsection Hash Tables and GHashTable Types
+
+One special case is that of GLib's @code{GHashTable} types.  The
+guile-gi library converts native Guile hash tables to @code{GHashTable}
+types as necessary when calling introspected native functions.  However,
+marshalling Guile hash tables into @code{GHashTable} types and back
+again has limitations.
+
+First, the keys of instances of @code{GHashTable} have a native type,
+and only a few common key types are handled by guile-gi: integers, real
+numbers, and strings can be converted.  All other types are treated as a
+pointer, which may not be what is intended.
+
+Second, some introspected native functions modify instances of
+@code{GHashTable} that are passed in as input arguments. The
+modifications to an instance of @code{GHashTable} input will not be
+reflected in the Guile hash tables from which is was created.
+
+@c -----------------------------------------------------------------
+@node Working with GObjects
+@section Working with GObjects
+@cindex types
+
+GObject is GLib's class system.  It provides many of the facilities one
+would expect for object-oriented programming in the context of GUIs.
+
+For each custom GObject type, Guile-GI creates a variable that holds
+the GOOPS type.  That variable has the form @code{<TYPE>},
+where TYPE is the GObject type name. To check whether an object
+has a given type, use the @code{is-a?} procedure found in GOOPS, which
+Guile-GI re-exports.
+
+@example
+(use-modules (gi))
+(use-typelibs ("GObject" "2.0") ("Gio" "2.0"))
+(is-a? (make <GApplication>) <GObject>)
+;; => #t
+@end example
+
+Each GObject struct, union, or object has a place in the GObject
+single-inheritance class structure.  A @code{RadioButton} is a type of
+@code{Button} is a type of @code{Widget}, for example.
+
+The native pointer is ``hidden'' inside a slot of the object.
+If you need to access it, @pxref{Compatibility}.
+
+@node GType
+@subsection GType
+@cindex GType
+
+Every data type registered by The GLib Dynamic Type system has a unique
+integer ID.  The integer ID is called the GType.  While GTypes are
+usually a transparent detail, you will need to use them explicitly to
+define new GObject parameters and signals.
+
+Guile-GI creates a special GOOPS type @code{<GType>} to hold these
+integer IDs.  There are some function that operate on @code{<GType>}
+integers that can be used to query information about the GObject class
+structure.
+This mapping is not complete, however.  Some datatypes on one end may have
+several (valid) representations on the other.  This includes for instance
+basic numeric types, which all map to some subtype of @code{<number>} with
+no size indicator, since Guile expands numbers as needed.
+
+@xref{GType Constants and Operations}
+
+@c -----------------------------------------------------------------
+@node GObject Methods
+@subsection GObject Methods
+@cindex methods
+
+Guile-GI exports object methods as GOOPS methods in the formats
+@code{type:method} and @code{method}, where @var{type} is the
+class on which the method is defined and @var{method} is its
+name.  Unbound methods (i.e. functions) are only bound to @code{method}.
+
+In either case, the following transformations are made to @var{type}
+and @var{method}:
+@enumerate
+@item
+Both @var{type} and @var{method} are converted to @code{kebab-case}.
+@item
+If the method returns a boolean value and has no output arguments,
+a @code{?} is appended to its name.
+@item
+If the method has an input, that is also marked as an output,
+or a pre-allocated output, a @code{!} is appended to its name.
+This comes from a Scheme naming convention for ``destructive'' functions --
+i.e. functions, which may modify their inputs in-place.
+@end enumerate
+
+Use whichever bindings you prefer or alternatively rename them using the
+@code{#:rename} argument to @code{use-modules} or @code{use-typelibs}
+respectively. Note that Guile currently warns if a binding is imported
+from multiple libraries (e.g. both GLib and Gtk), but this should not
+concern you in most cases, as both internally specialize the same
+generic method.
+
+@c -----------------------------------------------------------------
+@node GObject Signals
+@subsection GObject Signals
+@cindex signals
+
+GObjects have a functionality for defining and calling callback
+procedures that it calls @emph{signals}.  Note that these signals have
+nothing to do with Unix signals like @code{SIGTERM}.
+
+@findex connect
+To hook a callback procedure to an object's signal, use the
+@code{connect} procedure. Consider the following example.
+
+@example
+(define (activate app)
+   ...
+   )
+
+(define activate-signal (make <signal> #:name "activate"))
+
+(connect app              ; A GObject
+         activate-signal  ; A <signal> object
+         activate)        ; A procedure to call when emitted
+@end example
+
+In that example, the caller is attaching a procedure named
+@code{activate} to the object @code{app}'s ``activate'' signal.  When
+the gobject object calls all the callback procedures attached to its
+``activate'' signal it will call this @code{activate} procedure.
+
+When a callback procedure is called it may receive some arguments
+from the caller and some from user data.  In the example, @code{activate}
+is supposed to take a single argument.
+This argument -- @code{app} -- is supplied by the caller, as are all
+arguments to signals.
+
+@deffn Procedure connect obj (signal <signal>) (handler <procedure>) #:key after? detail
+@deffnx Procedure connect obj (signal <signal>) (detail <symbol>) (handler <procedure>) ...
+@deffnx Procedure connect-after obj (signal <signal>) (handler <procedure>) ...
+@deffnx Procedure connect-after obj (signal <signal>) (detail <symbol>) (handler <procedure>) ...
+Hooks @var{handler} to emissions of @var{signal}.  If @var{detail} is
+supplied, only emissions in which the detail matches it are considered.
+
+@code{connect-after} works like @code{connect}, except that the handler
+is run @emph{after} the main handling code.  The same can be achieved by
+setting @code{after?} to @code{#t}.
+
+Note, that @var{signal} may expect @var{handler} to have multiple output
+arguments.  Each bit set in its @code{output-mask} corresponds to
+one additional value in the output.
+If the @code{return-type} is @code{G_TYPE_NONE}, the number of expected
+outputs is the number of bits set in @code{output-mask}.  Otherwise,
+an additional (first) value is required for the return value of the signal
+itself.
+@end deffn
+
+Signal objects can also be used to emit signals. Note that you shouldn't
+normally do this when using objects of types that you did not define.
+When using objects of types that you did define, you should only emit
+the signals that you defined for that object (and perhaps the ``notify''
+signal when using explicit notification).
+
+@defspec @emph{(signal <signal>)} obj [detail] [args...]
+Emits the @var{signal} signal of @var{obj} with @var{detail} and
+@var{args}.  Note, that the interpretation of @var{detail} depends on
+whether or not @var{signal} is detailed.  If it is, @var{detail} needs
+to be a symbol, that will be translated to the detail of the emission.
+If it is not, it is considered the first argument and will be consed
+with @var{args} to form an argument list.
+@end defspec
+
+Signals have several slots, that can be bound on creation time (and
+reassigned freely, since they are proper GOOPS objects).  When
+connecting signals, only @var{name} needs to be supplied.  When using
+them as proper signals, at least @var{return-type} needs to be given as
+well.
+
+@defvr Slot name
+The name of the signal.
+A string.
+@end defvr
+@defvr Slot return-type
+The return type of the signal.
+A @code{<GType>} or integer, such as @code{G_TYPE_INT}.
+@end defvr
+@defvr Slot param-types
+The parameter types of the signal.
+A list of @code{<GType>}s or integers.
+@end defvr
+@defvr Slot accumulator
+An optional signal accumulator procedure. @xref{Signal Accumulators}.
+@end defvr
+@defvr Slot flags
+Signal flags, a logical or of one or more of
+@code{SIGNAL_RUN_FIRST}, @code{SIGNAL_RUN_LAST},
+@code{SIGNAL_RUN_CLEANUP}, @code{SIGNAL_NO_RECURSE}, etc.
+@c TODO: refer to the GObject manual
+@end defvr
+@defvr Slot output-mask
+A bitmask, describing which argument should be returned to the user when
+calling the signal as a procedure.
+@end defvr
+
+@node Signal Accumulators
+@subsubsection Signal Accumulators
+The signal accumulator is a special callback procedure that gets called
+during a signal emission.  The ``accumulator'' nomenclature comes from
+the common case where one wants to collect the return values of signal
+emissions.  In Scheme terms, the accumulator can be compared to a
+@code{fold} procedure that gets called on signal emission results.
+
+When specified, the signal accumulator is a procedure with two
+input arguments: @var{seed} and @var{current}. The input value
+@var{seed} is a value created by the previous call to the accumulator.
+The first time the accumulator is called, @var{seed} will zero for
+signals that return numeric types. The input value @var{current} is the
+return value of the just emitted signal.
+
+The accumulator procedure should return zero, one, or two values.
+@itemize @bullet
+@item
+If it produces no output value, signal handling continues for this
+signal, and @var{seed} is left unchanged for the next call to the
+accumulator.
+@item
+If it produces one output value, signal handling continues for this
+signal, and, for the next call to the accumulator, the @var{seed} value
+will be this output value.  Note that the output value must have the
+same type as specified for the signal output value: @code{G_TYPE_INT},
+@code{G_TYPE_FLOAT}, etc.
+@item
+If it produces two output values, @var{seed} is set to the second output
+value, and signal handling stops for this signal if the first output
+value is @code{#f}.
+@end itemize
+If at any time @var{seed} would be set to an incorrect value or more
+than two values are returned signal handling is aborted.
+
+@c -----------------------------------------------------------------
+@node GObject Properties
+@subsection GObject Properties
+
+GObject objects may have one or more properties, which are variables
+attached to the object that may be gotten or set.  GObject properties
+usually have C-like types.  Remember that GObject objects are instances
+of a class that may have a parent class, and each parent class may one
+or more properties. So, for example, if the object is a radio button,
+you may get or set properties that apply specifically to radio buttons,
+or generic buttons, or generic widgets.
+
+@findex <GParam>
+
+In Guile-GI, properties come in two flavours.  The basic building block
+are objects derived from @code{G_TYPE_PARAM} alias @code{<GParam>}.
+These can be created via introspected methods found in the
+@code{GObject} library.  They are enhanced so that they can work as
+procedures with setter.  Given an arbitrary property @code{prop},
+@code{(prop obj)} will fetch the corresponding property, whereas
+@code{(set! (prop obj) val)} will set it.
+
+The other flavour are GOOPS accessors.  These are used for introspected
+properties, so that the name may also overlap with a method or a signal
+of a different type. Other than that, they behave no different from
+@code{<GParam>}s -- in fact, they work by constructing a @code{<GParam>}
+and using their getters and setters.
+
+@node Custom GObjects
+@subsection Defining new GObject classes
+@cindex GObjects
+@cindex classes, GObject
+
+@findex register-type
+Usually any GObjects you use will be created by procedures such as
+@code{window:new}, and those GObject types will have been predefined in
+the typelib. But, it is possible to make custom GObject object classes
+using the @code{register-type} procedure.
+
+Bear in mind, that while Guile-GI internally uses GOOPS, GObjects
+implemented in it are not quite as flexible. For instance, you cannot
+meaningfully redefine a GObject-based type, which you could if you just
+used GOOPS types.  On the other hand, you can make use of the features
+of the GObject infrastructure, such as signals.
+
+Defining a new GObject class is rather complicated.
+
+@deffn Procedure register-type type-name parent-type [list-of-properties] [list-of-signals]
+This procedure creates and returns a new @code{<GType>} of a GObject
+object.
+
+@var{type-name} is the string name of the new type. Note, that it will
+be turned into a symbol internally.
+
+@var{parent-type} is the @code{<GType>} of the parent class to this
+class.  The parent class needs to be @code{<GObject>} or a GObject class
+that descends from it.
+
+@var{list-of-properties} is a list of parameter specifications.  These
+parameter specifications can be created using the @code{param-spec-TYPE}
+methods found in the @code{GObject} typelib.
+
+@var{list-of-signals} is a list of signal specifications. @xref{GObject
+Signals}.
+@end deffn
+
+To then make instances of your custom GObject type, use @code{make}.
+
+@node Sample Applications
+@section Sample Applications
+
+If you've managed to survive the tutorial thus far, you know should know
+everything you need to start programming with Guile-GI.  Let's throw
+down some examples.
+
+@node Window with Button
+@subsection Window with Button
+We will demonstrate the capabilities of Guile-GI by creating
+a window with a button.  There are two version of the same script, so
+that we can demonstrate different ways of doing things.
+
+In this first version, we use @code{use-typelibs} to load the bindings,
+and we largely stick to using methods.
+
+@example
+@include ex-button.scm
+@end example
+
+In the second version, the script is made faster by using @code{require}
+and @code{load-by-name} instead of @code{use-typelibs}.  It also prefers
+the @code{make} syntax to set properties directly, rather than calling
+methods one-by-one.
+
+@example
+@include example-1.scm
+@end example
+
+@node Threads and Concurrency
+@section Threads and Concurrency
+@cindex threads
+@cindex concurrency
+
+While Guile is multi-threaded, applications using Guile-GI are not fully
+thread-safe.  Notably, applications using GTK or GLib's main loop need
+all rendering and main loop activities to occur in one thread.  Also, all
+calls to @code{typelib-load} need to be made from the same thread.
+
+@node Debugging and Profiling
+@section Debugging and Profiling
+@cindex debugging
+@cindex profiling
+
+Debugging a program that makes use of Guile-GI bindings has some
+challenges.  A few notable one are these:
+@itemize
+@item
+When parsing a typelib file to generate a binding, some C procedures
+and structures will be bound while others lack sufficient information
+to be properly bound.
+@item
+For a given function call, the type and number of arguments in the
+Guile binding may differ from the type and number of arguments in the
+underlying C call.
+@item
+For a given function call, the stack will include a mix of
+Guile-managed frames, @code{libffi}-generated frames, and an
+application's C stack.
+@end itemize
+
+To add some insight about what is happening in the introspection
+layer, Guile-GI provides some hook functions for the purposes
+of debugging and makes use of GLib's debug logging functionality.
+
+@node Debugging Hooks
+@subsection Debugging Hooks
+
+Since most GObject-based libraries use an event and callback model,
+debugging can be challenging.  Guile-GI provides the ability for the
+user to hook into particular events in the introspection layer.
+@xref{Hooks,,,guile,The Guile reference manual} to see how to
+operate on them.
+
+The following hooks are defined
+@defvar %before-function-hook
+Will be emitted before calling a function with two arguments:
+@var{name}, a string denoting the name of the called function,
+and @var{args}, a list of Scheme variables passed to that function.
+
+Requires Guile 3.0.7 or greater.
+@end defvar
+
+Since the @code{%before-function-hook} procedure is called just before
+the FFI calls a C function, it would be called within the procedure call
+of any procedure created by GObject introspection.
+
+@defvar %before-callback-hook
+Will be emitted before invoking a callback with three arguments:
+@var{name}, a string denoting the name of the callback,
+@var{proc}, the Scheme procedure that will be called,
+and @var{args}, a list of Scheme variables passed to that function.
+
+Requires Guile 3.0.7 or greater.
+@end defvar
+
+@defvar %before-c-callback-hook
+Will be emitted before invoking a C callback with three arguments:
+@var{name}, a string denoting the name of the callback,
+@var{ptr}, a pointer to the C function that will be called,
+and @var{args}, a list of Scheme variables passed to that function.
+
+Requires Guile 3.0.7 or greater.
+@end defvar
+
+Callbacks are usually called as the result of signals, and the
+procedures to be called are expected to match the type of information
+the signal emits.  Setting @code{%before-callback-hook} and
+@code{%before-c-callback-hook} may provide clues when debugging signal
+events.
+
+@node GLib Logging
+@subsection GLib Logging
+
+GLib provides a logging library whose behavior can be tailored using
+environment variables.  GLib's logging library has a concept of
+@emph{log levels}: critical, error, warning, message, info, and debug.
+
+The @env{G_MESSAGES_DEBUG} environment variable may be set to a
+space-separated list of @emph{log domains} for which debug messages
+should be printed. Some useful log domains are @env{GuileGI} for
+Guile-GI messages, @env{dconf}, @env{GLib}, @env{GLib-GIO}, @env{Gdk},
+and @env{Gtk}.  Also, the special log domain @env{all} will print
+debug messages from all domains. For more information on how to take
+advantage of this logging, see
+@uref{https://developer.gnome.org/glib/stable/glib-running.html}.
+
+When @env{G_MESSAGES_DEBUG} is set to @env{GuileGI} or @env{all}, you
+will receive @emph{a lot} of debugging information from any Guile-GI
+libraries being used.  To help better filter through all this, a
+@code{(gi logging)} library provides a pair of alternative loggers.
+
+@subsubsection Using the Port Logger
+
+The @code{(gi logging)} library provides the @code{install-port-logger!}
+procedure that sends logging output to a Scheme port and provides
+functionality to target specific categories of debug information
+
+@deffn Procedure install-port-logger! port
+Given @var{port}, an output port, this procedure installs a GLib
+log writer function that outputs to @var{port}.
+
+The default behavior of this GLib log writer is to print critical,
+error, and warning messages to the port.
+This logger behaves like the default GLib logger -- i.e. it respects
+@env{G_MESSAGES_DEBUG} -- but in addition to that also reads
+@env{GIG_DEBUG} for more fine-grained control over the messages
+Guile-GI prints to the port.
+
+Set the @env{GIG_DEBUG} environment variable to a list of topics separated
+by any delimiter or the specific value @code{all}.
+@itemize
+@item
+@code{amap} prints information about the mapping of function arguments.
+@item
+@code{load} prints information -- when libraries are loaded -- on how C
+procedures, structs, unions, and objects are bound to Guile.
+@item
+@code{transfers} prints information on how C arguments are converted to
+Guile objects and vice versa.
+@item
+@code{all} prints all the debug information.
+@end itemize
+
+If @env{GIG_DEBUG} is not set, only information about function calls
+will be output.
+@end deffn
+
+@subsubsection Using the systemd journal Logger
+
+The @code{(gi logging)} library provides the @code{install-journal-logger!}
+procedure.
+
+@deffn Procedure install-journal-logger!
+This procedure sets GLib's @code{g_log_writer_journald} function
+as the current GLib log writer function.
+@end deffn
+
+For distributions that use systemd's journal, the @command{journalctl}
+command can help filter debug output.  Guile-GI's debug messages
+have the message key @env{GIG_DOMAIN} which can be used to filter
+debug info into general categories.
+
+@subsubsection Using a custom logger
+
+The @code{(gi logging)} library provides the @code{install-custom-logger!}
+procedure.
+
+@deffn Procedure install-custom-logger! logger
+This procedure installs a helper, which will call @var{logger}
+to do the actual logging, as the GLib log writer function.
+
+For the call to @var{logger}, the @code{GLogField} structures used
+by GLib internally are translated to keyword arguments.  For that,
+the keys are @code{kebab-cased} and the values either transformed
+into suitable scheme datatypes or left as-is and passed by pointer.
+In the latter case, another argument is added for the length of the field,
+which takes the same keyword as the first one, but with the suffix @code{-length}.
+
+The currently supported conversions are:
+@itemize
+@item
+@code{#:message}, the current message as a string,
+@item
+@code{#:priority}, a string representation of the log level,
+@item
+@code{#:glib-domain}, the log domain as a string,
+@item
+@code{#:gig-domain}, the Guile-GI log domain as a string, and
+@item
+@code{#:code-file}, @code{#:code-func} and @code{#:code-line},
+the location from which the log call was made, each as strings.
+@end itemize
+
+The log level is passed as an integer under the keyword @code{#:log-level}.
+If you've loaded the GLib typelib before installing the logger, you can transform
+that into log level flags by using @code{number->log-level}.
+
+@end deffn
+
+@node Application Deployment
+@section Application Deployment
+@cindex deployment
+
+If you write a program in Guile-GI and wish to share it with the world,
+you will need to ensure your users have all the prerequisites.
+
+@cindex prerequisites
+
+At a minimum, Guile-GI scripts will require that users have the
+following packages.
+@itemize
+@item Guile
+@item Guile-GI
+@item libffi
+@item GLib
+@item GObject-Introspection aka GIRepository
+@end itemize
+
+And then, of course, a Guile-GI program will additionally require
+whatever libraries its uses (GTK, WebKit2) as well as their associated
+typelib files.
+
+@cindex directory structure
+
+A good layout for an application might be the following, though we can't
+discourage you from using any other.
+@example
+/path/to/project
+|-- doc
+|-- data
+|   |-- icons
+|   |-- various XML files
+|   `-- etc.
+|-- module
+|   |-- project.scm
+|   `-- project
+|       `-- more Scheme source files
+|-- src
+|   `-- C source files (optional, when depending on other libraries/non-GI functionality)
+|-- test
+|   `-- tests
+`-- READMEs, ChangeLogs, build system stuff ...
+@end example
+
+You should be able to make use of most ``data APIs'' (such as GSettings,
+GResource, GtkBuilder...), as long as the data files don't need to
+reference functionality implemented in your Scheme code.  If you do find
+yourself needing some of that, e.g. if you want to write a GtkBuilder
+file for a custom class, consider implementing this functionality in C
+and exporting it as a typelib instead.
+
+@node Testing and Continuous Integration
+@section Testing and Continuous Integration
+@cindex testing
+@cindex continuous integration
+
+The distribution does contain a couple of scripts that should enable it
+to be built by Travis-CI.  In the root directory, there is a
+@code{.travis.yml} and a @code{Dockerfile} that work together.  The
+docker container pulls the latest version of Ubuntu, and the YML file
+builds the project and runs @code{make distcheck}.
