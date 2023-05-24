@@ -45,6 +45,7 @@ jobs:
           mkdir -p docs
           git rm docs/*.*
           rm docs/*.*
+          mkdir -p docs
           cp *.css docs/
           texi2any index.texi --css-ref=document-1.0.1.css --html --split=chapter --output=docs
           git add docs/*.html docs/*.css
