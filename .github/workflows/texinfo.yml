@@ -42,8 +42,9 @@ jobs:
           git config user.email "<>"
       - name: texinfo to html
         run: |
-          git rm docs/*
-          cp *.css docs
+          git rm docs/*.html
+          mkdir -p docs
+          cp *.css docs/
           makeinfo guile-gi.texi --css-ref=document-1.0.1.css --html --split=chapter --output=docs
           git add docs/*.html docs/*.css
           git commit -m "HTML update"
