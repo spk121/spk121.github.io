@@ -35,24 +35,22 @@ jobs:
         run: export LANG=C.UTF-8 TERM=dumb VERBOSE=true DEBIAN_FRONTEND=noninteractive TZ=America/Los_Angeles        
       - name: Install Packages
         run: sudo apt-get install -y texinfo texlive
-      - name: make check
-        run: |
-          rm docs/*
-          makeinfo guile-gi.texi --css-ref=document-1.0.1.css --html --output=docs
-        shell: bash {0}        
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
       - name: setup git config
         run: |
           # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
-      - name: commit
+      - name: texinfo to html
         run: |
-          # Stage the file, commit and push
-          git add docs/*.html
-          git commit -m "new date commit"
+          git rm docs/*
+          cp *.css docs
+          makeinfo guile-gi.texi --css-ref=document-1.0.1.css --html --split=chapter --output=docs
+          git add docs/*.html docs/*.css
+          git commit -m "HTML update"
           git push origin master        
+        shell: bash {0}        
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
