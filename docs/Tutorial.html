@@ -57,12 +57,11 @@ ul.no-bullet {list-style: none}
 Next: <a href="Reference-Guide.html#Reference-Guide" accesskey="n" rel="next">Reference Guide</a>, Previous: <a href="Introduction.html#Introduction" accesskey="p" rel="prev">Introduction</a>, Up: <a href="index.html" accesskey="u" rel="up">Guile-GI</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<span id="Tutorial-1"></span><h2 class="chapter">2 Tutorial</h2>
-
+<span id="Tutorial-1"></span><h2 class="chapter">Tutorial</h2>
 
 <hr>
 <div class="section" id="Parsing-Typelibs-and-Creating-Bindings">
-<span id="Parsing-Typelibs-and-Creating-Bindings-1"></span><h3 class="section">2.1 Parsing Typelibs and Creating Bindings</h3>
+<span id="Parsing-Typelibs-and-Creating-Bindings-1"></span><h3 class="section">Parsing Typelibs and Creating Bindings</h3>
 
 <p>When Guile-GI is used, it creates procedures, variables, and types
 according to the instructions in the <code>typelib</code> files.  These are
@@ -73,7 +72,7 @@ file.
 form or another.  You can choose one of three basic strategies.
 </p>
 <div class="subsection" id="use_002dtypelibs">
-<h4 class="subsection">2.1.1 <code>use-typelibs</code></h4>
+<h4 class="subsection"><code>use-typelibs</code></h4>
 
 <p>The easiest way of doing so is <code>use-typelibs</code>, as shown below.
 </p>
@@ -112,7 +111,7 @@ into multiple modules.
 </p>
 </div>
 <div class="subsection" id="require-and-load_002dby_002dname">
-<h4 class="subsection">2.1.2 <code>require</code> and <code>load-by-name</code></h4>
+<h4 class="subsection"><code>require</code> and <code>load-by-name</code></h4>
 
 <p>For efficiency&rsquo;s sake, you may want to only load parts, e.g. just
 GtkApplication and GtkWindow to significantly speed up loading.  By
@@ -135,7 +134,7 @@ primitives to facilitate exactly that. See <a href="Reference-Guide.html#Typelib
 
 </div>
 <div class="subsection" id="typelib_002d_003emodule">
-<h4 class="subsection">2.1.3 <code>typelib-&gt;module</code></h4>
+<h4 class="subsection"><code>typelib-&gt;module</code></h4>
 
 <p>If you don&rsquo;t care much about waiting times &ndash; perhaps you only have
 a set of small dependencies, or you really need everything from a library &ndash;
@@ -166,7 +165,7 @@ See <a data-manual="guile" href="https://www.gnu.org/software/guile/manual/html_
 </div>
 </div>
 <div class="section" id="Generating-Documentation-from-Typelibs">
-<span id="Generating-Documentation-from-Typelibs-1"></span><h3 class="section">2.2 Generating Documentation from Typelibs</h3>
+<span id="Generating-Documentation-from-Typelibs-1"></span><h3 class="section">Generating Documentation from Typelibs</h3>
 
 <p>Loading typelibs alone might be all you need if you have perfect
 knowledge of all the libraries you are going to use and an intuitive
@@ -206,16 +205,15 @@ such files in a few locations, including the current working directory.
 <hr>
 </div>
 <div class="section" id="Categories-of-Typelib-Bindings">
-<span id="Categories-of-Typelib-Bindings-1"></span><h3 class="section">2.3 Categories of Typelib Bindings</h3>
+<span id="Categories-of-Typelib-Bindings-1"></span><h3 class="section">Categories of Typelib Bindings</h3>
 
 <p>Typelib files describe a few different types of information.  Here&rsquo;s a
 quick introduction to the categories of information it provides, and how
 Guile-GI creates bindings.
 </p>
-
 <hr>
 <div class="subsection" id="Constants">
-<span id="Constants-1"></span><h4 class="subsection">2.3.1 Constants</h4>
+<span id="Constants-1"></span><h4 class="subsection">Constants</h4>
 
 <p>On introspection, when a typelib file defines a constant, Guile-GI
 creates a variable.  The variable name is in <code>MACRO_CASE</code>, capital
@@ -233,7 +231,7 @@ BIG_ENDIAN
 <hr>
 </div>
 <div class="subsection" id="Flags-and-Enums">
-<span id="Flags-and-Enums-1"></span><h4 class="subsection">2.3.2 Flags and Enums</h4>
+<span id="Flags-and-Enums-1"></span><h4 class="subsection">Flags and Enums</h4>
 
 <p>When a typelib file contains a set of flags or enums, Guile-GI creates a
 class for that set.  That class contains an association map between
@@ -258,7 +256,7 @@ Its association map can be queried two ways.
 <hr>
 </div>
 <div class="subsection" id="Structs-and-Unions">
-<span id="Structs-and-Unions-1"></span><h4 class="subsection">2.3.3 Structs and Unions</h4>
+<span id="Structs-and-Unions-1"></span><h4 class="subsection">Structs and Unions</h4>
 
 <p>In C, a <code>struct</code> or <code>union</code> is named type of a collection of
 member objects.
@@ -288,7 +286,7 @@ using <code>make</code>.
 <hr>
 </div>
 <div class="subsection" id="GObjects">
-<span id="GObjects-1"></span><h4 class="subsection">2.3.4 GObjects</h4>
+<span id="GObjects-1"></span><h4 class="subsection">GObjects</h4>
 
 <p>Some libraries use the GObject class system provided by GLib.  GLib
 provides a complete, if idiosyncratic, class system written in C.  It
@@ -328,7 +326,7 @@ when the object is constructed
 <hr>
 </div>
 <div class="subsection" id="Procedures-and-Methods">
-<span id="Procedures-and-Methods-1"></span><h4 class="subsection">2.3.5 Procedures and Methods</h4>
+<span id="Procedures-and-Methods-1"></span><h4 class="subsection">Procedures and Methods</h4>
 
 <p>When a library provides functions, they can either be standalone
 functions or methods.  Methods are functions closely associated with a
@@ -375,17 +373,16 @@ Such conflicts require manual resolution.
 </div>
 </div>
 <div class="section" id="Argument-Conversion">
-<span id="Argument-Conversion-1"></span><h3 class="section">2.4 Argument Conversion</h3>
+<span id="Argument-Conversion-1"></span><h3 class="section">Argument Conversion</h3>
 
 <p>The bulk of Guile-GI is the code that converts Scheme function arguments
 to and from from the native arguments and return values that a library
 expects.  Guile-GI tries to do it in a predictable and unsurprising way,
 but, the conversion from Scheme to native types has some mismatch.
 </p>
-
 <hr>
 <div class="subsection" id="Function-Parameters-Arity-and-Return-Values">
-<span id="Function-Parameters_002c-Arity_002c-and-Return-Values"></span><h4 class="subsection">2.4.1 Function Parameters, Arity, and Return Values</h4>
+<span id="Function-Parameters_002c-Arity_002c-and-Return-Values"></span><h4 class="subsection">Function Parameters, Arity, and Return Values</h4>
 <span id="index-arity"></span>
 <span id="index-return-values"></span>
 <span id="index-function-parameters"></span>
@@ -437,14 +434,14 @@ Guile procedures <code>values</code> and <code>receive</code>.
 <hr>
 </div>
 <div class="subsection" id="Booleans">
-<span id="Booleans-1"></span><h4 class="subsection">2.4.2 Booleans</h4>
+<span id="Booleans-1"></span><h4 class="subsection">Booleans</h4>
 
 <p>Guile booleans convert to native 0 and 1 boolean values.
 </p>
 <hr>
 </div>
 <div class="subsection" id="Characters">
-<span id="Characters-1"></span><h4 class="subsection">2.4.3 Characters</h4>
+<span id="Characters-1"></span><h4 class="subsection">Characters</h4>
 
 <p>There are two native character types, the 1-byte <code>gchar</code> and the
 4-byte <code>gunichar</code>.  The native 1-byte <code>gchar</code> character type
@@ -467,7 +464,7 @@ represent.
 <hr>
 </div>
 <div class="subsection" id="Numbers">
-<span id="Numbers-1"></span><h4 class="subsection">2.4.4 Numbers</h4>
+<span id="Numbers-1"></span><h4 class="subsection">Numbers</h4>
 
 <p>The conversion between Scheme and native integer arguments is direct,
 but since Scheme integers can be any size, an overflow error can occur
@@ -478,7 +475,7 @@ argument expecting a 4-byte float.
 <hr>
 </div>
 <div class="subsection" id="Strings">
-<span id="Strings-1"></span><h4 class="subsection">2.4.5 Strings</h4>
+<span id="Strings-1"></span><h4 class="subsection">Strings</h4>
 
 <p>Native strings are expected to be either in the locale encoding or in
 UTF-8.  Guile strings are arrays of Unicode codepoints.
@@ -498,7 +495,7 @@ string cannot be represented in the current locale.
 <hr>
 </div>
 <div class="subsection" id="Structs-Unions-and-Objects">
-<span id="Structs_002c-Unions_002c-and-Objects"></span><h4 class="subsection">2.4.6 Structs, Unions, and Objects</h4>
+<span id="Structs_002c-Unions_002c-and-Objects"></span><h4 class="subsection">Structs, Unions, and Objects</h4>
 
 <p>Guile-GI creates GOOPS types to represent native struct or object types,
 and the GOOPS class wraps a native pointer to the object information.
@@ -510,7 +507,7 @@ instance can point to the same pointer.
 <hr>
 </div>
 <div class="subsection" id="Native-Pointers">
-<span id="Native-Pointers-1"></span><h4 class="subsection">2.4.7 Native Pointers</h4>
+<span id="Native-Pointers-1"></span><h4 class="subsection">Native Pointers</h4>
 
 <p>Some procedures expect native void pointers.  For these arguments, you
 can pass a Guile foreign pointer or a Guile bytevector.
@@ -518,7 +515,7 @@ can pass a Guile foreign pointer or a Guile bytevector.
 <hr>
 </div>
 <div class="subsection" id="Arrays">
-<span id="Arrays-1"></span><h4 class="subsection">2.4.8 Arrays</h4>
+<span id="Arrays-1"></span><h4 class="subsection">Arrays</h4>
 
 <p>There are many different types of native arrays, and the Guile types
 expected for GObject procedures that native arrays varies depending on
@@ -553,7 +550,7 @@ procedures will likely fail to do anything sensible.
 <hr>
 </div>
 <div class="subsection" id="Null-Pointers-and-Optional-Arguments">
-<span id="Null-Pointers-and-Optional-Arguments-1"></span><h4 class="subsection">2.4.9 Null Pointers and Optional Arguments</h4>
+<span id="Null-Pointers-and-Optional-Arguments-1"></span><h4 class="subsection">Null Pointers and Optional Arguments</h4>
 
 <p>If a native function has a pointer argument that can be NULL, the Guile
 <code>#f</code> can be sent or received to indicate a null pointer.
@@ -561,7 +558,7 @@ procedures will likely fail to do anything sensible.
 <hr>
 </div>
 <div class="subsection" id="Hash-Tables-and-GHashTable-Types">
-<span id="Hash-Tables-and-GHashTable-Types-1"></span><h4 class="subsection">2.4.10 Hash Tables and GHashTable Types</h4>
+<span id="Hash-Tables-and-GHashTable-Types-1"></span><h4 class="subsection">Hash Tables and GHashTable Types</h4>
 
 <p>One special case is that of GLib&rsquo;s <code>GHashTable</code> types.  The
 guile-gi library converts native Guile hash tables to <code>GHashTable</code>
@@ -583,7 +580,7 @@ reflected in the Guile hash tables from which is was created.
 </div>
 </div>
 <div class="section" id="Working-with-GObjects">
-<span id="Working-with-GObjects-1"></span><h3 class="section">2.5 Working with GObjects</h3>
+<span id="Working-with-GObjects-1"></span><h3 class="section">Working with GObjects</h3>
 <span id="index-types"></span>
 
 <p>GObject is GLib&rsquo;s class system.  It provides many of the facilities one
@@ -609,10 +606,9 @@ single-inheritance class structure.  A <code>RadioButton</code> is a type of
 <p>The native pointer is &ldquo;hidden&rdquo; inside a slot of the object.
 If you need to access it, see <a href="Reference-Guide.html#Compatibility">Compatibility</a>.
 </p>
-
 <hr>
 <div class="subsection" id="GType">
-<span id="GType-1"></span><h4 class="subsection">2.5.1 GType</h4>
+<span id="GType-1"></span><h4 class="subsection">GType</h4>
 <span id="index-GType"></span>
 
 <p>Every data type registered by The GLib Dynamic Type system has a unique
@@ -634,7 +630,7 @@ no size indicator, since Guile expands numbers as needed.
 <hr>
 </div>
 <div class="subsection" id="GObject-Methods">
-<span id="GObject-Methods-1"></span><h4 class="subsection">2.5.2 GObject Methods</h4>
+<span id="GObject-Methods-1"></span><h4 class="subsection">GObject Methods</h4>
 <span id="index-methods"></span>
 
 <p>Guile-GI exports object methods as GOOPS methods in the formats
@@ -664,7 +660,7 @@ generic method.
 <hr>
 </div>
 <div class="subsection" id="GObject-Signals">
-<span id="GObject-Signals-1"></span><h4 class="subsection">2.5.3 GObject Signals</h4>
+<span id="GObject-Signals-1"></span><h4 class="subsection">GObject Signals</h4>
 <span id="index-signals"></span>
 
 <p>GObjects have a functionality for defining and calling callback
@@ -772,10 +768,9 @@ A list of <code>&lt;GType&gt;</code>s or integers.
 calling the signal as a procedure.
 </p></dd></dl>
 
-
 <hr>
 <div class="subsubsection" id="Signal-Accumulators">
-<span id="Signal-Accumulators-1"></span><h4 class="subsubsection">2.5.3.1 Signal Accumulators</h4>
+<span id="Signal-Accumulators-1"></span><h4 class="subsubsection">Signal Accumulators</h4>
 <p>The signal accumulator is a special callback procedure that gets called
 during a signal emission.  The &ldquo;accumulator&rdquo; nomenclature comes from
 the common case where one wants to collect the return values of signal
@@ -810,7 +805,7 @@ than two values are returned signal handling is aborted.
 </div>
 </div>
 <div class="subsection" id="GObject-Properties">
-<span id="GObject-Properties-1"></span><h4 class="subsection">2.5.4 GObject Properties</h4>
+<span id="GObject-Properties-1"></span><h4 class="subsection">GObject Properties</h4>
 
 <p>GObject objects may have one or more properties, which are variables
 attached to the object that may be gotten or set.  GObject properties
@@ -839,7 +834,7 @@ and using their getters and setters.
 <hr>
 </div>
 <div class="subsection" id="Custom-GObjects">
-<span id="Defining-new-GObject-classes"></span><h4 class="subsection">2.5.5 Defining new GObject classes</h4>
+<span id="Defining-new-GObject-classes"></span><h4 class="subsection">Defining new GObject classes</h4>
 <span id="index-GObjects"></span>
 <span id="index-classes_002c-GObject"></span>
 
@@ -882,16 +877,15 @@ methods found in the <code>GObject</code> typelib.
 </div>
 </div>
 <div class="section" id="Sample-Applications">
-<span id="Sample-Applications-1"></span><h3 class="section">2.6 Sample Applications</h3>
+<span id="Sample-Applications-1"></span><h3 class="section">Sample Applications</h3>
 
 <p>If you&rsquo;ve managed to survive the tutorial thus far, you know should know
 everything you need to start programming with Guile-GI.  Let&rsquo;s throw
 down some examples.
 </p>
-
 <hr>
 <div class="subsection" id="Window-with-Button">
-<span id="Window-with-Button-1"></span><h4 class="subsection">2.6.1 Window with Button</h4>
+<span id="Window-with-Button-1"></span><h4 class="subsection">Window with Button</h4>
 <p>We will demonstrate the capabilities of Guile-GI by creating
 a window with a button.  There are two version of the same script, so
 that we can demonstrate different ways of doing things.
@@ -1022,7 +1016,7 @@ methods one-by-one.
 </div>
 </div>
 <div class="section" id="Threads-and-Concurrency">
-<span id="Threads-and-Concurrency-1"></span><h3 class="section">2.7 Threads and Concurrency</h3>
+<span id="Threads-and-Concurrency-1"></span><h3 class="section">Threads and Concurrency</h3>
 <span id="index-threads"></span>
 <span id="index-concurrency"></span>
 
@@ -1034,7 +1028,7 @@ calls to <code>typelib-load</code> need to be made from the same thread.
 <hr>
 </div>
 <div class="section" id="Debugging-and-Profiling">
-<span id="Debugging-and-Profiling-1"></span><h3 class="section">2.8 Debugging and Profiling</h3>
+<span id="Debugging-and-Profiling-1"></span><h3 class="section">Debugging and Profiling</h3>
 <span id="index-debugging"></span>
 <span id="index-profiling"></span>
 
@@ -1056,10 +1050,9 @@ application&rsquo;s C stack.
 layer, Guile-GI provides some hook functions for the purposes
 of debugging and makes use of GLib&rsquo;s debug logging functionality.
 </p>
-
 <hr>
 <div class="subsection" id="Debugging-Hooks">
-<span id="Debugging-Hooks-1"></span><h4 class="subsection">2.8.1 Debugging Hooks</h4>
+<span id="Debugging-Hooks-1"></span><h4 class="subsection">Debugging Hooks</h4>
 
 <p>Since most GObject-based libraries use an event and callback model,
 debugging can be challenging.  Guile-GI provides the ability for the
@@ -1110,7 +1103,7 @@ events.
 <hr>
 </div>
 <div class="subsection" id="GLib-Logging">
-<span id="GLib-Logging-1"></span><h4 class="subsection">2.8.2 GLib Logging</h4>
+<span id="GLib-Logging-1"></span><h4 class="subsection">GLib Logging</h4>
 
 <p>GLib provides a logging library whose behavior can be tailored using
 environment variables.  GLib&rsquo;s logging library has a concept of
@@ -1131,7 +1124,7 @@ libraries being used.  To help better filter through all this, a
 <code>(gi logging)</code> library provides a pair of alternative loggers.
 </p>
 <div class="subsubsection" id="Using-the-Port-Logger">
-<h4 class="subsubsection">2.8.2.1 Using the Port Logger</h4>
+<h4 class="subsubsection">Using the Port Logger</h4>
 
 <p>The <code>(gi logging)</code> library provides the <code>install-port-logger!</code>
 procedure that sends logging output to a Scheme port and provides
@@ -1166,7 +1159,7 @@ will be output.
 
 </div>
 <div class="subsubsection" id="Using-the-systemd-journal-Logger">
-<h4 class="subsubsection">2.8.2.2 Using the systemd journal Logger</h4>
+<h4 class="subsubsection">Using the systemd journal Logger</h4>
 
 <p>The <code>(gi logging)</code> library provides the <code>install-journal-logger!</code>
 procedure.
@@ -1184,7 +1177,7 @@ debug info into general categories.
 </p>
 </div>
 <div class="subsubsection" id="Using-a-custom-logger">
-<h4 class="subsubsection">2.8.2.3 Using a custom logger</h4>
+<h4 class="subsubsection">Using a custom logger</h4>
 
 <p>The <code>(gi logging)</code> library provides the <code>install-custom-logger!</code>
 procedure.
@@ -1222,7 +1215,7 @@ that into log level flags by using <code>number-&gt;log-level</code>.
 </div>
 </div>
 <div class="section" id="Application-Deployment">
-<span id="Application-Deployment-1"></span><h3 class="section">2.9 Application Deployment</h3>
+<span id="Application-Deployment-1"></span><h3 class="section">Application Deployment</h3>
 <span id="index-deployment"></span>
 
 <p>If you write a program in Guile-GI and wish to share it with the world,
@@ -1276,7 +1269,7 @@ and exporting it as a typelib instead.
 <hr>
 </div>
 <div class="section" id="Testing-and-Continuous-Integration">
-<span id="Testing-and-Continuous-Integration-1"></span><h3 class="section">2.10 Testing and Continuous Integration</h3>
+<span id="Testing-and-Continuous-Integration-1"></span><h3 class="section">Testing and Continuous Integration</h3>
 <span id="index-testing"></span>
 <span id="index-continuous-integration"></span>
 

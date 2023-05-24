@@ -57,7 +57,7 @@ ul.no-bullet {list-style: none}
 Next: <a href="Further-Resources-and-Contact-Info.html" accesskey="n" rel="next">Further Resources and Contact Info</a>, Previous: <a href="Tutorial.html#Tutorial" accesskey="p" rel="prev">Tutorial</a>, Up: <a href="index.html" accesskey="u" rel="up">Guile-GI</a> &nbsp; [<a href="index.html#SEC_Contents" title="Table of contents" rel="contents">Contents</a>][<a href="The-Index.html" title="Index" rel="index">Index</a>]</p>
 </div>
 <hr>
-<span id="Reference-Guide-1"></span><h2 class="chapter">3 Reference Guide</h2>
+<span id="Reference-Guide-1"></span><h2 class="chapter">Reference Guide</h2>
 
 <p>The Guile-GI project provides a Guile module <samp>(gi)</samp>.  The
 <samp>(gi)</samp> module is an interface for dynamically creating Guile
@@ -67,7 +67,7 @@ their <samp>.typelib</samp> files.
 
 <hr>
 <div class="section" id="Typelib-Introspection">
-<span id="Typelib-Introspection-1"></span><h3 class="section">3.1 Typelib Introspection</h3>
+<span id="Typelib-Introspection-1"></span><h3 class="section">Typelib Introspection</h3>
 <span id="index-typelibs"></span>
 <span id="index-introspection"></span>
 
@@ -155,7 +155,7 @@ Throws an error, if the library could not be found or loaded.
 <hr>
 </div>
 <div class="section" id="Typelib-Documentation">
-<span id="Typelib-Documentation-1"></span><h3 class="section">3.2 Typelib Documentation</h3>
+<span id="Typelib-Documentation-1"></span><h3 class="section">Typelib Documentation</h3>
 
 <dl class="def">
 <dt id="index-typelib"><span class="category">Procedure: </span><span><strong>typelib</strong> <em>lib [version] [#:require?=#t]</em><a href='#index-typelib' class='copiable-anchor'> &para;</a></span></dt>
@@ -219,7 +219,7 @@ or use your own XSLT stylesheets.
 <hr>
 </div>
 <div class="section" id="GType-Constants-and-Operations">
-<span id="GType-Constants-and-Operations-1"></span><h3 class="section">3.3 GType Constants and Operations</h3>
+<span id="GType-Constants-and-Operations-1"></span><h3 class="section">GType Constants and Operations</h3>
 <p>The <code>(gi types)</code> module provides these variables and procedures.
 </p>
 <dl class="def">
@@ -281,7 +281,7 @@ specified <var>gtype</var> as GType integers.
 <hr>
 </div>
 <div class="section" id="Enums-and-Flags">
-<span id="Enums-and-Flags-1"></span><h3 class="section">3.4 Enums and Flags</h3>
+<span id="Enums-and-Flags-1"></span><h3 class="section">Enums and Flags</h3>
 <p>While GObject is an OOP framework and as such mainly focuses on objects,
 there also exists functionality to deal with enumerated types.
 Enumerated types are a way of converting raw numbers into meaningful
@@ -305,7 +305,7 @@ with every other object type. Specifically, enums derive from
 <code>&lt;GEnum&gt;</code> and flags derive from <code>&lt;GFlags&gt;</code>.
 </p>
 <div class="subsection" id="Conversions">
-<h4 class="subsection">3.4.1 Conversions</h4>
+<h4 class="subsection">Conversions</h4>
 <dl class="def">
 <dt id="index-number_002d_003eenum"><span class="category">Procedure: </span><span><strong>number-&gt;enum</strong> <em>(class &lt;class&gt;) (number &lt;number&gt;)</em><a href='#index-number_002d_003eenum' class='copiable-anchor'> &para;</a></span></dt>
 <dt id="index-number_002d_003eenum-1"><span class="category">Procedure: </span><span><strong>number-&gt;enum</strong> <em>(class &lt;class&gt;)</em><a href='#index-number_002d_003eenum-1' class='copiable-anchor'> &para;</a></span></dt>
@@ -394,7 +394,7 @@ Curries. Binds <var>flags</var> on <var>type</var>.
 
 </div>
 <div class="subsection" id="Standard-Procedure-overrides">
-<h4 class="subsection">3.4.2 Standard Procedure overrides</h4>
+<h4 class="subsection">Standard Procedure overrides</h4>
 <p><code>&lt;GEnum&gt;</code> and <code>&lt;GFlags&gt;</code> display as their symbolic/list
 representation and also use them in write in lieu of their addresses.
 Enumerations can be numerically compared to enumerations and numbers
@@ -404,7 +404,7 @@ and flags of the same type using <code>equal?</code>.
 </p>
 </div>
 <div class="subsection" id="R6RS_002desque-flag-operations">
-<h4 class="subsection">3.4.3 R6RS-esque flag operations</h4>
+<h4 class="subsection">R6RS-esque flag operations</h4>
 <p>Some would certainly like to see an equivalence the enumerated types
 discussed above and R6RS enum sets. However, it turns out, that they are
 not compatible.  Enumerations are not enum sets, because they are not
@@ -488,13 +488,13 @@ set with respect to <code>(flags-mask class)</code>.
 </div>
 </div>
 <div class="section" id="Utilities">
-<span id="Utilities-1"></span><h3 class="section">3.5 Utilities</h3>
+<span id="Utilities-1"></span><h3 class="section">Utilities</h3>
 <span id="index-Utilities"></span>
 
 <p>The following procedures are in the <code>(gi util)</code> library.
 </p>
 <div class="subsection" id="Utilities-for-Guile-Modules">
-<h4 class="subsection">3.5.1 Utilities for Guile Modules</h4>
+<h4 class="subsection">Utilities for Guile Modules</h4>
 
 <span id="index-default_002dduplicate_002dbinding_002dhandler"></span>
 <span id="index-Guile-modules_002c-defining"></span>
@@ -581,7 +581,7 @@ method overloading via GOOPS.
 
 </div>
 <div class="subsection" id="Utilities-for-Vectors">
-<h4 class="subsection">3.5.2 Utilities for Vectors</h4>
+<h4 class="subsection">Utilities for Vectors</h4>
 
 <p>In the <code>(gi util)</code> library, the following helper procedures are provided
 for use with SRFI-4-type uniform numeric vectors.
@@ -606,7 +606,7 @@ signed integers.
 </div>
 </div>
 <div class="section" id="Compatibility">
-<span id="Compatibility-1"></span><h3 class="section">3.6 Compatibility</h3>
+<span id="Compatibility-1"></span><h3 class="section">Compatibility</h3>
 <span id="index-fiddle"></span>
 
 <p>Guile-GI normally keeps pointers to the actual objects hidden (for valid
@@ -652,10 +652,10 @@ be freed manually using the correct <code>-destroy</code> function.
 <hr>
 </div>
 <div class="section" id="More-Stuff">
-<span id="More-Stuff-1"></span><h3 class="section">3.7 More Stuff</h3>
+<span id="More-Stuff-1"></span><h3 class="section">More Stuff</h3>
 
 <div class="subsection" id="Help_0021-Guile_002dGI-overrides-core-binding-X">
-<h4 class="subsection">3.7.1 Help! Guile-GI overrides core binding X</h4>
+<h4 class="subsection">Help! Guile-GI overrides core binding X</h4>
 <span id="index-protect_002a-1"></span>
 <span id="index-Overrides"></span>
 
@@ -668,7 +668,7 @@ the <code>protect</code> or <code>protect*</code> renamer from <code>(gi util)</
 </p>
 </div>
 <div class="subsection" id="Help_0021-Guile_002dGI-bindings-conflict-with-each-other">
-<h4 class="subsection">3.7.2 Help! Guile-GI bindings conflict with each other</h4>
+<h4 class="subsection">Help! Guile-GI bindings conflict with each other</h4>
 <span id="index-merge_002dgenerics"></span>
 <span id="index-shrug_002dequals-1"></span>
 
