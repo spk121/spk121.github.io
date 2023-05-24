@@ -1,0 +1,204 @@
+@node Introduction
+@chapter Introduction
+
+@display
+Guile-GI is a Guile package that hopes to provide access for
+GObject-based libraries such as GTK+, GLib, WebKitGTK+ and many more.
+
+It supports GNU/Linux, and has been tested with Guile-2.2 and
+Guile-3.0. Guile GI is licensed under the GPL3+. This
+documentation is licensed under the FDLv1.3+.
+
+If you want to write a Guile application for GNOME or a Guile GUI
+application using GTK+, then Guile-GI (when it is finished) will be
+the way to go.
+@end display
+
+@quotation Warning
+Guile-GI is in beta testing.  Interfaces are stabilizing, but, they are not
+stable.  Please have patience and report bugs.
+@end quotation
+
+In this chapter we'll explain why there is a need for this project and
+how to install it.  And we'll also describe the technologies that GTK
+uses to make itself available to language bindings.  If you just want to
+get to work, feel free to jump straight to the @ref{Tutorial} or
+@ref{Reference Guide}.
+
+@node The Concept of Operations
+@section The Concept of Operations
+
+GNU Guile itself does not provide its own graphical user interface (GUI)
+programming toolkit; it needs to incorporate an existing GUI toolkit.
+Of the existing GUI toolkits, GTK has been designed with the goal of
+being language agnostic, usable with any programming language.
+
+The application program interface (API) for GTK is large, with dozens of
+classes and hundreds of functions.  It consist of several sub-projects:
+GTK+, GDK, Pango, GLib and many others.  These APIs change from version
+to version.  Creating a binding by hand -- wrapping each type and
+function for use with Guile and then keeping it up do date -- would be a
+laborious task.  Knowing this, GTK provides a way to query information
+about the classes and functions it provides so that a binding may be
+generated programmatically.  Instead of creating a Guile binding for all
+of GTK and it subprojects, we create a Guile binding for its
+introspection layer, and then use that information to make a Guile
+binding for all of GTK.
+
+To make a Guile binding for the introspection layer, we need to wrap
+three application program interfaces.
+@enumerate
+@item
+The GLib Dynamic Type System
+@item
+GObject - the fundamental base class for all object types in GTK+
+@item
+GIRepository - the GObject introspection repository manager
+@end enumerate
+Then, using information queried from these 3 API, a binding for GTK can
+be made programmatically.  As a bonus, a binding to any project that
+adheres to GObject standards can be created as well.
+
+@node The GLib Dynamic Type System
+@subsection The GLib Dynamic Type System
+
+Information on the project's data types are stored in The GLib Dynamic
+Type System@footnote{The GLib Dynamic Type System is sometimes called
+GType for short, but, since the word GType is used for other things,
+we'll keep using the full name @emph{ad nauseum}.}.  The GLib Dynamic
+Type System's model for a data type is that you create a class and then
+make instances of that class.  For it, each type can be described with
+the following information
+@itemize
+@item
+a GType - a unique integer ID for the type
+@item
+a type name
+@item
+a class data structure
+@item
+class initialization and destruction functions
+@item
+an instance data structure
+@item
+instance initialization and copy functions
+@end itemize
+This type system has inheritance: each type may be a specialization of a
+parent type.  Note that the class-and-instance capability of The GLib
+Dynamic Type System is its own unique beast: not identical to C++
+classes or to GOOPS.
+
+When the introspection layer describes constants, variables, and
+function arguments, each of these @emph{must} have a type that is
+registered by The GLib Dynamic Type System.  There are a set of
+fundamental GType IDs, denoted with the form @code{G_TYPE_XXX}, and the
+type of each variable or argument traces to a fundamental GType ID or
+one that is subclassed from a fundamental type.
+
+To allow introspection, there are GType IDs for all the standard native
+types: @code{char} has @code{G_TYPE_CHAR}, @code{int} has
+@code{G_TYPE_INT}, etc.  Each enumerated type or collection of flags has
+its own type, which is a subclass of @code{G_TYPE_FLAGS} or
+@code{G_TYPE_ENUM}.  Types that describe information stored in a typed
+pointer, such as native @code{struct}, each have their own type that
+is a subclass of @code{G_TYPE_BOXED}.
+
+And, most importantly for GTK, there are types that descend from
+@code{G_TYPE_OBJECT}. As we'll discuss in the next section, GObject is
+the fundamental type providing the common attributes and methods for all
+object types in GTK+, Pango, and other libraries based on GObject.
+
+@node The GObject Class
+@subsection The GObject Class
+
+For GTK, the most important fundamental type is @code{G_TYPE_OBJECT}.
+GObject is the house of cards upon which GTK is built.  GObject is the
+base class for an object-oriented class system that provides specific
+facilities for object-oriented programming in the context of GUIs.
+
+@emph{Inheritance} - GObject classes are arranged in a hierarchy.  Each
+class has the fundamental GObject class as its base class.  This
+hierarchy is single-inheritance: each class has zero or more subclasses
+and only one superclass.
+
+@emph{Properties} - Each instance of a GObject class has a set of zero
+or more typed parameters.  Subclasses have access to the parameters of
+the parent, and subclasses may add additional parameters.  These are
+like slots in GOOPS, except they are strongly typed.
+
+@emph{Methods} - Each GObject class may define a set of methods or
+generic functions that operate on that type.  A subclass inherits all
+the methods of its superclass and may define additional methods.
+
+@emph{Signals} - GObject classes define a general purpose notification
+mechanism it calls @emph{signals} which are messages an instance can
+transmit and receive@footnote{GObject signals are not UNIX signals, like
+@code{SIGINT}.}  For each instance, a callback function can be defined
+that is executed on the receipt of a given signal.  Signals are also
+inherited: an instance of a subclass can catch all of the signals its
+parent class can catch, plus it can define new signals.
+
+In our binding, we do our best to express GObject and subclasses to
+GObject in the context of GOOPS classes, but, there is some mismatch.
+
+@node The GObject Introspection Repository Manager
+@subsection The GObject Introspection Repository Manager
+
+The GObject Introspection Repository Manager, or GIRepository for short,
+is the API through which you can query all the available types, methods
+and functions a library provides.
+
+GTK provides an application program interface in a dynamic library.  On
+Unix-like systems, the dynamic library is a shared object, @file{.so}
+file.  On Microsoft Windows, the dynamic library is a Dynamic Link
+Library, a @file{.dll} file.  Information on the proper initialization,
+ownership, and destruction of in-memory objects is not intrinsic to
+dynamic libraries.  Thus, to properly use them, you need
+@emph{metadata}.
+
+GTK provides metadata via The GObject Introspection Repository Manager.
+Under GIRepository, each dynamic library also provides a companion
+metadata file, a @file{.typelib} file.  If we can provide Guile with the
+facility to parse @file{.typelib} files, we could safely call the API
+the dynamic libraries provide.
+
+These typelib files are in a custom binary format.  They commonly
+contain the following information about a dynamic library:
+@itemize
+@item
+constants
+@item
+flags and enums
+@item
+functions and their arguments
+@item
+structures and unions
+@item
+classes and methods
+@end itemize
+
+The task set out to Guile-GI is to parse a typelib, dynamically load a
+shared library, and generate Guile procedures, constants, and GOOPS
+types and generics that map to the contents of the shared library.
+
+Several other libraries have also adopted GObject Introspection, so if
+we can make it work for GTK, we get many other libraries for free.
+
+@node Installation
+@section Installation
+
+In some happy future, you might be able to get this from whatever method
+your operating system normally uses to download free software.
+
+If you are trying to build this from the Git repository, use
+@command{git clone} to copy the tree onto your computer. After cloning
+the repository, run @command{./bootstrap} (or manually invoke @command{autoreconf})
+to create a @file{configure} file.
+
+If you are building from a @file{guile-gi.tar.gz}, unpack the file.
+
+From there, running @command{configure}, then @command{make}, then
+@command{sudo make install} will give you a running system.
+
+In the file archives, look for a file named @file{INSTALL} for detailed
+instructions.
