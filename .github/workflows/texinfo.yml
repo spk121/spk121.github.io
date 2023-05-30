@@ -37,18 +37,17 @@ jobs:
         run: sudo apt-get install -y texinfo texlive
       - name: setup git config
         run: |
-          # setup the username and email. I tend to use 'GitHub Actions Bot' with no email by default
           git config user.name "GitHub Actions Bot"
           git config user.email "<>"
       - name: texinfo to html
         run: |
-          mkdir -p docs
-          git rm docs/*.*
-          rm docs/*.*
-          mkdir -p docs
-          cp *.css docs/
-          texi2any index.texi --css-ref=document-1.0.1.css --html --split=chapter --no-number-sections --no-headers --output=docs
-          git add docs/*.html docs/*.css
+          mkdir -p docs/guile-gi
+          git rm docs/*.* docs/guile-gi/*.*
+          rm docs/*.* docs/guile-gi/*.*
+          mkdir -p docs/guile-gi
+          cp *.css docs/guile-gi
+          texi2any index.texi --css-ref=document-1.0.1.css --html --split=chapter --no-number-sections --no-headers --output=docs/guile-gi
+          git add docs/*.html docs/*.css docs/guile-gi/*.html docs/guile-gi/*.css
           git commit -m "HTML update"
           git push origin master        
         shell: bash {0}        
